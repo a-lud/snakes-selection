@@ -1,8 +1,8 @@
 # Snake Selection Paper
 
 This repository contains scripts used for selection and HOG analyses. In addition to
-these scripts, the repository [nf-pipelines][nfpipelines]) was also used to generate data -
-specifically the [MSA][msa]) and [HyPhy][hyphy]) pipelines.
+these scripts, the repository [nf-pipelines][nfpipelines] was also used to generate data -
+specifically the [MSA][msa] and [HyPhy][hyphy] pipelines.
 
 ## Structure of the repository
 

@@ -1,0 +1,13 @@
+Condition,threshold,four,nine
+aBSREL Aipysurus laevis,0.05,679,15
+aBSREL Aipysurus laevis unique,0.05,403,8
+aBSREL terrestrial,0.05,944,143
+aBSREL terrestrial unique,0.05,668,136
+aBSREL Aipysurus laevis,0.01,625,13
+aBSREL Aipysurus laevis unique,0.01,390,8
+aBSREL terrestrial,0.01,821,126
+aBSREL terrestrial unique,0.01,586,121
+aBSREL Aipysurus laevis,0.001,581,12
+aBSREL Aipysurus laevis unique,0.001,379,8
+aBSREL terrestrial,0.001,716,104
+aBSREL terrestrial unique,0.001,514,100

@@ -1,0 +1,7 @@
+Dataset,Gene,Species,GO-term,Term,Definition,Ontology
+Nine,TMEM106A,Node_aipysurusLaevis,GO:0032755,positive regulation of interleukin-6 production,"Any process that activates or increases the frequency, rate, or extent of interleukin-6 production.",BP
+Nine,TMEM106A,Node_aipysurusLaevis,GO:0032760,positive regulation of tumor necrosis factor production,"Any process that activates or increases the frequency, rate or extent of tumor necrosis factor production.",BP
+Nine,TMEM106A,Node_aipysurusLaevis,GO:0045348,positive regulation of MHC class II biosynthetic process,"Any process that activates or increases the frequency, rate or extent of the chemical reactions and pathways resulting in the formation of MHC class II.",BP
+Nine,TMEM106A,Node_aipysurusLaevis,GO:0032731,positive regulation of interleukin-1 beta production,"Any process that activates or increases the frequency, rate, or extent of interleukin-1 beta production.",BP
+Nine,TXNDC12,Node_aipysurusLaevis,GO:0045454,cell redox homeostasis,Any process that maintains the redox environment of a cell or compartment within a cell.,BP
+Nine,C7,Node_aipysurusLaevis,GO:0005579,membrane attack complex,A protein complex produced by sequentially activated components of the complement cascade inserted into a target cell membrane and forming a pore leading to cell lysis via ion and water flow.,CC

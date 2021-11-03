@@ -13,6 +13,7 @@
 #     - Intensification (K > 1)
 #     - Relaxation (K < 1)
 #
+# NOT USED!
 # - MEME (D9 only)
 #   - Identify individual sites under selection
 #     - Purifying (omega < 1)
@@ -24,6 +25,7 @@ suppressPackageStartupMessages({
   library(tidyverse)
   library(magrittr)
   library(here)
+  library(patchwork)
 })
 
 # ---------------------------------------------------------------------------- #
@@ -61,7 +63,7 @@ genes_ter_D9 <- read_lines(
 )
 
 annotation <- read_csv(
-  file = here('data', 'utility-data', 'master-GO-annotation.csv'),
+  file = here('data', 'utility-data', 'master-GO-annotation.csv.gz'),
   col_names = TRUE, 
   col_types = cols()
 )
@@ -99,7 +101,7 @@ absrel_sig <- imap_dfr(hyphy, .id = 'Dataset', ~{
     mutate(
       Condition = ifelse(
         Species %in% species,
-        'Marine',
+        'Aipysurus laevis',
         'Terrestrial'
       )
     )
@@ -139,8 +141,8 @@ absrel_sig %>%
   ) +
   labs(
     x = 'Proportion of Sites',
-    y = 'Count',
-    fill = expression("\u03C9 Rate Class")
+    y = 'Frequency',
+    fill = expression("Omega (\u03C9)\nRate Class")
   ) +
   theme_bw() +
   theme(
@@ -153,7 +155,7 @@ absrel_sig %>%
     axis.text = element_text(size = 14),
     
     # Strip text
-    strip.text = element_text(size = 16, face = 'bold')
+    strip.text = element_text(size = 16, face = 'bold.italic')
   ) +
   facet_grid(
     Condition ~ Dataset,
@@ -183,8 +185,8 @@ absrel_sig %>%
   labs(
     x = 'Full Adaptive Model (Branch lengths)',
     y = 'Proportion of Sites',
-    colour = expression("\u03C9 Rate Class"),
-    shape = expression("\u03C9 Rate Class")
+    colour = expression("Omega (\u03C9)\nRate Class"),
+    shape = expression("Omega (\u03C9)\nRate Class")
   ) +
   theme_bw() +
   theme(
@@ -197,7 +199,7 @@ absrel_sig %>%
     axis.text = element_text(size = 14),
     
     # Strip text
-    strip.text = element_text(size = 16, face = 'bold')
+    strip.text = element_text(size = 16, face = 'bold.italic')
   ) +
   facet_grid(
     Condition ~ Dataset,
@@ -225,7 +227,7 @@ absrel_sig %>%
   labs(
     x = expression("\u03C9"),
     y = 'Count',
-    fill = expression("\u03C9 Rate Class")
+    fill = expression("Omega (\u03C9)\nRate Class")
   ) +
   theme_bw() +
   theme(
@@ -238,7 +240,7 @@ absrel_sig %>%
     axis.text = element_text(size = 14),
     
     # Strip text
-    strip.text = element_text(size = 16, face = 'bold')
+    strip.text = element_text(size = 16, face = 'bold.italic')
   ) +
   facet_grid(
     Condition ~ Dataset,
@@ -246,6 +248,7 @@ absrel_sig %>%
   )
 invisible(dev.off())
 
+# Length of gene vs proportion ---
 ragg::agg_png(
   filename = here('figures', 'absrel', 'point-length-omega-proportion.png'),
   width = 2000,
@@ -267,8 +270,8 @@ absrel_sig %>%
   labs(
     x = 'Number of Sites',
     y = 'Proportion of Sites',
-    colour = expression("\u03C9 Rate Class"),
-    shape = expression("\u03C9 Rate Class")
+    colour = expression("Omega (\u03C9)\nRate Class"),
+    shape = expression("Omega (\u03C9)\nRate Class")
   ) +
   theme_bw() +
   theme(
@@ -281,7 +284,7 @@ absrel_sig %>%
     axis.text = element_text(size = 14),
     
     # Strip text
-    strip.text = element_text(size = 16, face = 'bold')
+    strip.text = element_text(size = 16, face = 'bold.italic')
   ) +
   facet_grid(
     Condition ~ Dataset,
@@ -330,32 +333,38 @@ relax_sig <- imap_dfr(hyphy, .id = 'Dataset', ~{
       Group = 
         ifelse(
           ID %in% genes_marine,
-          'Marine',
+          'Aipysurus laevis',
           ifelse(
             ID %in% genes_ter,
             'Terrestrial',
-            'Rest'
+            'Remaining'
           )
         )
     )
 }) %>%
   mutate(
-    Group = factor(x = Group, levels = c('Marine', 'Terrestrial', 'Rest')),
+    Group = factor(x = Group, levels = c('Aipysurus laevis', 'Terrestrial', 'Remaining')),
     Significance = factor(x = Significance, levels = c('Significant', 'Insignificant'))
   )
 
 # Sig/Insignificant - stratified by dataset and type of signal
 ragg::agg_png(
   filename = here('figures', 'relax', 'bar-plot-summary-significant-signal.png'),
-  width = 2000,
+  width = 1500,
   height = 1500,
   units = 'px',
   res = 144
 )
 relax_sig %>%
+  mutate(
+    Dataset = ifelse(Dataset == 'Four', 'Dataset-4', 'Dataset-9')
+  ) %>%
   ggplot(aes(x = Condition, fill = Condition)) +
   geom_histogram(stat = 'count', colour = 'black') +
   scale_fill_manual(values = c('#F4CC70', '#DE7A22')) +
+  labs(
+    y = 'Count of Orthologs'
+  ) +
   theme_bw() +
   theme(
     # Legend
@@ -377,17 +386,17 @@ relax_sig %>%
 invisible(dev.off())
 
 # Type of selection by group - marine/terrestrial genes
-relax_sig %>%
+t <- relax_sig %>%
   split(x = ., f = .$Dataset) %>%
-  iwalk(~{
+  imap(~{
     path <- here('figures', 'relax', paste0(.y, '-bar-plot-significant-by-group.png'))
-    ragg::agg_png(
-      filename = path,
-      width = 2000,
-      height = 1500,
-      units = 'px',
-      res = 144
-    )
+    # ragg::agg_png(
+    #   filename = path,
+    #   width = 2000,
+    #   height = 1500,
+    #   units = 'px',
+    #   res = 144
+    # )
     p <- .x %>%
       ggplot(aes(
         x = Condition,
@@ -395,6 +404,9 @@ relax_sig %>%
       )) +
       geom_histogram(stat = 'count', colour = 'black') +
       scale_fill_manual(values = c('#F4CC70', '#DE7A22')) +
+      labs(
+        y = 'Count of Orthologs'
+      ) +
       theme_bw() +
       theme(
         # Legend
@@ -403,7 +415,8 @@ relax_sig %>%
         legend.position = 'bottom',
         
         # Strip
-        strip.text = element_text(size = 16, face = 'bold'),
+        strip.text.x = element_text(size = 16, face = 'bold.italic'),
+        strip.text.y = element_text(size = 16, face = 'bold'),
         
         # Axis title/text
         axis.title = element_text(size = 16, face = 'bold'),
@@ -413,103 +426,117 @@ relax_sig %>%
         Significance ~ Group,
         scales = 'free_y'
       )
-    print(p)
-    invisible(dev.off())
+    # print(p)
+    # invisible(dev.off())
   })
 
+# Ad hoc patchwork
+p1 <- t[[1]] + theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+p2 <- t[[2]] + theme(axis.title.x = element_blank(), legend.position = 'none')
+patchPlot <- p1 /p2 + plot_annotation(tag_levels = 'A')
+
+ragg::agg_png(
+  filename = here('figures', 'relax', 'patchwork-relax.png'),
+  width = 1500,
+  height = 1500,
+  units = 'px',
+  res = 144
+)
+print(patchPlot)
+invisible(dev.off())
 
 # ---------------------------------------------------------------------------- #
-# MEME Plots - Unused
-nine_sample_meme <- read_lines(
-  paste0(
-    'data/selection/nine-sample/genes-selection/nine-sample-absrel-pval-',
-    pval,
-    '-aipysurusLaevis.txt'
-  )
-)
-
-sixteen_sample_meme <- read_lines(
-  paste0('data/selection/sixteen-sample/genes-selection/sixteen-sample-absrel-pval-',
-         pval,
-         '-aipysurus.txt')
-)
-
-meme_list <- list(
-  'nine-sample' = nine_sample_meme,
-  'sixteen-sample' = sixteen_sample_meme
-)
-
-t <- imap(meme_list, ~{
-  
-  lst <- hyphy[[.y]]
-  path <- file.path('data/figures', paste0(.y, '-pvalue-', pval, '-MEME.png'))
-  a <- anno[ anno$ogid %in% .x, ] %>%
-    distinct()
-  
-  df <- lst$meme$MLE %>%
-    mutate(ID = sub('.*-', '', ID)) %>%
-    filter(ID %in% .x) %>%
-    left_join(a, by = c('ID' = 'ogid')) %>%
-    mutate(ID = paste0(symbol, ' (', ID, ')')) %>%
-    group_by(ID) %>%
-    mutate(Position = 1:n()) %>%
-    ungroup()
-  
-  p <- ggplot(data = df) +
-    geom_point(data = filter(df, `p-value` > 0.1),
-               aes(x = Position,
-                   y = (1 - `p-value`),
-                   colour = `p-value`),
-               size = 3, colour = 'black') +
-    geom_point(data = filter(df, `p-value` <= 0.05),
-               aes(x = Position,
-                   y = (1 - `p-value`),
-                   colour = `p-value`),
-               size = 3, colour = 'red') +
-    geom_point(data = filter(df, `p-value` > 0.05, `p-value` <= 0.1),
-               aes(x = Position,
-                   y = (1 - `p-value`),
-                   colour = `p-value`),
-               size = 3, colour = RColorBrewer::brewer.pal(n = 3, name = 'Dark2')[1]) +
-    labs(
-      # y = expression(beta^'+'~'(Non-synonymous substitution rate for positive/neutral component at each site)'),
-      y = 'Pvalue (1 - pvalue)',
-      x = 'Position'
-    ) +
-    # guides(
-    #   colour = guide_legend(title = expression('P-value'<='0.1'))
-    # ) +
-    theme_bw() +
-    facet_wrap(. ~ ID, ncol = 3, scales = 'free_x')
-  
-  
-  # p <- ggplot(data = df) +
-  #   geom_point(data = filter(df, `p-value` > 0.1),
-  #              aes(x = Position,
-  #                  y = `beta+`,
-  #                  colour = `p-value`),
-  #              size = 3, colour = 'black') +
-  #   geom_point(data = filter(df, `p-value` <= 0.05),
-  #              aes(x = Position,
-  #                  y = `beta+`,
-  #                  colour = `p-value`),
-  #              size = 3, colour = 'red') +
-  #   geom_point(data = filter(df, `p-value` > 0.05, `p-value` <= 0.1),
-  #              aes(x = Position,
-  #                  y = `beta+`,
-  #                  colour = `p-value`),
-  #              size = 3, colour = RColorBrewer::brewer.pal(n = 3, name = 'Dark2')[1]) +
-  #   labs(y = expression(beta^'+'~'(Non-synonymous substitution rate for positive/neutral component at each site)'),
-  #        x = 'Position') +
-  #   guides(colour = guide_legend(title = expression('P-value'<='0.1'))) +
-  #   theme_bw() +
-  #   facet_wrap(. ~ ID, ncol = 3, scales = 'free')
-  ragg::agg_png(filename = path,
-                width = 1200,
-                height = 1200,
-                units = 'px',
-                res = 144)
-  print(p)
-  invisible(dev.off())
-})
-
+# MEME Plots - Yeah, nah, unused
+# nine_sample_meme <- read_lines(
+#   paste0(
+#     'data/selection/nine-sample/genes-selection/nine-sample-absrel-pval-',
+#     pval,
+#     '-aipysurusLaevis.txt'
+#   )
+# )
+# 
+# sixteen_sample_meme <- read_lines(
+#   paste0('data/selection/sixteen-sample/genes-selection/sixteen-sample-absrel-pval-',
+#          pval,
+#          '-aipysurus.txt')
+# )
+# 
+# meme_list <- list(
+#   'nine-sample' = nine_sample_meme,
+#   'sixteen-sample' = sixteen_sample_meme
+# )
+# 
+# t <- imap(meme_list, ~{
+#   
+#   lst <- hyphy[[.y]]
+#   path <- file.path('data/figures', paste0(.y, '-pvalue-', pval, '-MEME.png'))
+#   a <- anno[ anno$ogid %in% .x, ] %>%
+#     distinct()
+#   
+#   df <- lst$meme$MLE %>%
+#     mutate(ID = sub('.*-', '', ID)) %>%
+#     filter(ID %in% .x) %>%
+#     left_join(a, by = c('ID' = 'ogid')) %>%
+#     mutate(ID = paste0(symbol, ' (', ID, ')')) %>%
+#     group_by(ID) %>%
+#     mutate(Position = 1:n()) %>%
+#     ungroup()
+#   
+#   p <- ggplot(data = df) +
+#     geom_point(data = filter(df, `p-value` > 0.1),
+#                aes(x = Position,
+#                    y = (1 - `p-value`),
+#                    colour = `p-value`),
+#                size = 3, colour = 'black') +
+#     geom_point(data = filter(df, `p-value` <= 0.05),
+#                aes(x = Position,
+#                    y = (1 - `p-value`),
+#                    colour = `p-value`),
+#                size = 3, colour = 'red') +
+#     geom_point(data = filter(df, `p-value` > 0.05, `p-value` <= 0.1),
+#                aes(x = Position,
+#                    y = (1 - `p-value`),
+#                    colour = `p-value`),
+#                size = 3, colour = RColorBrewer::brewer.pal(n = 3, name = 'Dark2')[1]) +
+#     labs(
+#       # y = expression(beta^'+'~'(Non-synonymous substitution rate for positive/neutral component at each site)'),
+#       y = 'Pvalue (1 - pvalue)',
+#       x = 'Position'
+#     ) +
+#     # guides(
+#     #   colour = guide_legend(title = expression('P-value'<='0.1'))
+#     # ) +
+#     theme_bw() +
+#     facet_wrap(. ~ ID, ncol = 3, scales = 'free_x')
+#   
+#   
+#   # p <- ggplot(data = df) +
+#   #   geom_point(data = filter(df, `p-value` > 0.1),
+#   #              aes(x = Position,
+#   #                  y = `beta+`,
+#   #                  colour = `p-value`),
+#   #              size = 3, colour = 'black') +
+#   #   geom_point(data = filter(df, `p-value` <= 0.05),
+#   #              aes(x = Position,
+#   #                  y = `beta+`,
+#   #                  colour = `p-value`),
+#   #              size = 3, colour = 'red') +
+#   #   geom_point(data = filter(df, `p-value` > 0.05, `p-value` <= 0.1),
+#   #              aes(x = Position,
+#   #                  y = `beta+`,
+#   #                  colour = `p-value`),
+#   #              size = 3, colour = RColorBrewer::brewer.pal(n = 3, name = 'Dark2')[1]) +
+#   #   labs(y = expression(beta^'+'~'(Non-synonymous substitution rate for positive/neutral component at each site)'),
+#   #        x = 'Position') +
+#   #   guides(colour = guide_legend(title = expression('P-value'<='0.1'))) +
+#   #   theme_bw() +
+#   #   facet_wrap(. ~ ID, ncol = 3, scales = 'free')
+#   ragg::agg_png(filename = path,
+#                 width = 1200,
+#                 height = 1200,
+#                 units = 'px',
+#                 res = 144)
+#   print(p)
+#   invisible(dev.off())
+# })
+# 

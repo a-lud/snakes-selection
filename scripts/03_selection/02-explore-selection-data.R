@@ -61,14 +61,22 @@ iwalk(hyphy, ~{
   # Plot
   p <- .x$absrel$`Test results` %>%
     ggplot(aes(x = `Positive test results`)) +
-    geom_bar(aes(y = ..prop..),
-             colour = 'black', 
-             fill = 'grey',
-             alpha = 0.6) +
-    scale_y_continuous(name = 'Proportion of Genes', 
-                       breaks = seq(0, 0.7, 0.1)) +
+    geom_bar(
+      aes(y = ..prop..),
+      colour = 'black', 
+      fill = 'grey',
+      alpha = 0.6
+    ) +
+    scale_y_continuous(
+      name = 'Proportion of Genes', 
+      breaks = seq(0, 0.7, 0.1)
+    ) +
     scale_x_continuous(name = 'Number of Branches With a Signal of Selection') +
-    theme_bw()
+    theme_bw() +
+    theme(
+      axis.title = element_text(size = 16, face = 'bold'),
+      axis.text = element_text(size = 14)
+    )
   ragg::agg_png(filename = path, 
                 width = 1000,
                 height = 1000, 
@@ -96,16 +104,36 @@ iwalk(hyphy, ~{
   
   p <- .x$absrel$`Branch Attributes` %>%
     filter(Species %in% test_branches) %>%
+    mutate(
+      Species = case_when(
+        Species == 'aipysurusLaevis' ~ 'Aipysurus laevis',
+        Species == 'najaNaja' ~ 'Naja naja',
+        Species == 'notechisScutatus' ~ 'Notechis scutatus',
+        Species == 'pseudonajaTextilis' ~ 'Pseudonaja textilis',
+        Species == 'Node_aipysurusLaevis' ~ 'Node Aipysurus laevis',
+        Species == 'Node_notechisScutatus' ~ 'Node Notechis scutatus',
+        Species == 'Node_pseudonajaTextilis' ~ 'Node Pseudonaja textilis',
+      )
+    ) %>%
     ggplot(aes(x = `Rate Classes`)) +
-    geom_bar(aes(y = ..prop..), 
-             colour = 'black', 
-             fill = 'grey',
-             alpha = 0.6) +
+    geom_bar(
+      aes(y = ..prop..), 
+      colour = 'black', 
+      fill = 'grey',
+      alpha = 0.6
+    ) +
     facet_wrap(.~Species) +
-    scale_y_continuous(name = 'Proportion of Orthologues', 
-                       breaks = seq(0,1,0.2)) +
+    scale_y_continuous(
+      name = 'Proportion of Orthologues', 
+      breaks = seq(0,1,0.2)
+    ) +
     scale_x_continuous(name = 'Rate Class Categories') +
-    theme_bw()
+    theme_bw() +
+    theme(
+      axis.title = element_text(size = 16, face = 'bold'),
+      axis.text = element_text(size = 14),
+      strip.text.x = element_text(size = 14, face = 'bold.italic')
+    )
   ragg::agg_png(filename = path, 
                 width = 1000,
                 height = 1000, 
@@ -115,7 +143,7 @@ iwalk(hyphy, ~{
   invisible(dev.off())
 })
 
-# ---------------------------------------------------------------------------- #
+ # ---------------------------------------------------------------------------- #
 # Selection Summary Table: Number of genes passing alpha <= pval
 imap(hyphy, ~{
   # Create output directory
@@ -320,7 +348,7 @@ write_csv(
 )
 
 # ---------------------------------------------------------------------------- #
-# Upset plots
+# Upset plots - TODO: Italicise species
 combination_matrix <- imap(hyphy, ~{
   map(pval, function(p) {
     path <- file.path(
@@ -365,10 +393,10 @@ combination_matrix <- imap(hyphy, ~{
     
     # Named list for ComplexHeatmap's UpSet
     l <- list(
-      'A. laevis' = s1,
-      'N. scutatus' = s2,
-      'P. textilis' = s3,
-      'N. naja' = s4
+      'Aipysurus laevis' = s1,
+      'Notechis scutatus' = s2,
+      'Pseudonaja textilis' = s3,
+      'Naja naja' = s4
     )
     
     # Combinations matrix
@@ -383,24 +411,28 @@ combination_matrix <- imap(hyphy, ~{
       right_annotation = NULL,
       left_annotation = ComplexHeatmap::rowAnnotation(
         "Set size" = ComplexHeatmap::anno_barplot(
+          axis_param = list(
+            gp = grid::gpar(fontsize=12)
+          ),
           ComplexHeatmap::set_size(mat), 
-          border = FALSE, 
+          border = FALSE,
           gp = grid::gpar(fill = "black"), 
           width = unit(3, "cm")
         )
       ),
       comb_col = c("#c03728", "#919c4c", "#f5c04a", "#828585")[ComplexHeatmap::comb_degree(mat)],
-      column_title = "UpSet: Common Orthologs Between\naBSREL-Marine and aBSREL-Terrestrial"
+      # column_title = "UpSet: Common Orthologs Between\naBSREL-Marine and aBSREL-Terrestrial",
+      row_names_gp = grid::gpar(fontface = 'italic')
     )
     
-    ragg::agg_png(filename = path, 
-                  width = 1000, 
-                  height = 1000, 
-                  units = 'px', 
+    ragg::agg_png(filename = path,
+                  width = 1000,
+                  height = 1000,
+                  units = 'px',
                   res = 144)
     print(upSet)
     invisible(dev.off())
-    
+
     # Return combination matrix
     return(mat)
   })

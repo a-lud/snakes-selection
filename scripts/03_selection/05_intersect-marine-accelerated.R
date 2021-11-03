@@ -26,7 +26,7 @@ marine_379 <- read_lines(
 )
 
 marine_379 <- read_csv(
-  file = here('data', 'utility-data', 'master-GO-annotation.csv'),
+  file = here('data', 'utility-data', 'master-GO-annotation.csv.gz'),
   col_names = TRUE,
   col_type = cols()
 ) %>%
@@ -41,7 +41,7 @@ marine_6 <- read_lines(
 )
 
 marine_6 <- read_csv(
-  file = here('data', 'utility-data', 'master-GO-annotation.csv'),
+  file = here('data', 'utility-data', 'master-GO-annotation.csv.gz'),
   col_names = TRUE,
   col_type = cols()
 ) %>%
@@ -244,10 +244,16 @@ peng_471 <- read_csv(
 lit_genes <- list(
   'chikina' = chikina_690,
   'foote' = foote_191,
-  'gayke' = Gayk_152,
+  'gayk' = Gayk_152,
   'mcgowan' = mcgowan_228,
   'peng' = peng_471
 )
+
+# write_rds(
+#   x = lit_genes, 
+#   file = 'data/literature-marine-genes/list-literature-genes.rds',
+#   compress = 'gz'
+# )
 
 # ---------------------------------------------------------------------------- #
 # Get gene synonyms from biomaRt
@@ -288,11 +294,16 @@ gene_synonyms <- imap_dfr(lit_genes, ~{
     dataset = case_when(
       dataset == 'chikina' ~ 'Chikina et al. 2016',
       dataset == 'foote' ~ 'Foote et al. 2015',
-      dataset == 'gayke' ~ 'Gayke et al. 2018',
+      dataset == 'gayk' ~ 'Gayk et al. 2018',
       dataset == 'mcgowan' ~ 'McGowan et al. 2012',
       dataset == 'peng' ~ 'Peng et al. 2020'
     )
   )
+
+# write_csv(
+#   x = gene_synonyms,
+#   file = here('data', 'literature-marine-genes', 'literature-marine-genes.csv')
+# )
 
 # ---------------------------------------------------------------------------- #
 # Join tables to find overlap
@@ -321,34 +332,41 @@ ragg::agg_png(
   res = 144
 )
 overlap_379 %>%
+  group_by(dataset) %>%
+  summarise(count = n()) %>%
+  mutate(
+    n_genes = case_when(
+      dataset == 'Chikina et al. 2016' ~ '690',
+      dataset == 'Foote et al. 2015' ~ '191',
+      dataset == 'Gayk et al. 2018' ~ '152',
+      dataset == 'McGowan et al. 2012' ~ '228',
+      dataset == 'Peng et al. 2020'~ '471'
+    )
+  ) %>%
   ggplot(
     aes(
       x = dataset,
+      y = count,
       fill = dataset
     )
   ) +
-  geom_histogram(
-    stat = 'count',
-    colour = 'black'
-  ) +
+  geom_bar(stat = 'identity', colour = 'black') +
+  geom_text(aes(label = n_genes), vjust = -0.5) +
   ggpomological::scale_fill_pomological() +
-  labs(
-    x = 'Study'
-  ) +
   scale_y_continuous(breaks = seq(1,14, 1), limits = c(0, 14)) +
   theme_bw() +
   theme(
     # Axis labels
     axis.title = element_blank(),
     # axis.title.x = element_text(size = 16, face = 'bold'),
-    
+
     # Axis text
     axis.text = element_text(size = 14),
-    
+
     # Legend
-    legend.title = element_blank(),
-    legend.position = 'bottom',
-    legend.text = element_text(size = 14)
+    # legend.title = element_blank(),
+    legend.position = 'none',
+    # legend.text = element_text(size = 14)
   )
 invisible(dev.off())
 

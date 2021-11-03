@@ -1,0 +1,17 @@
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+Atenuis_CAGATC_TTAGGC_GCCAAT.fa	FASTA	Protein	7161	2116652	1	295.6	2588
+Nscutatus_L1_eye.fa	FASTA	Protein	29823	12673597	85	425.0	4649
+Ptextilis_L1_eye.fa	FASTA	Protein	34000	14890255	84	437.9	5858
+aipysurusLaevis.fa	FASTA	Protein	71608	13646670	18	190.6	13383
+aipysurusLaevis_ACAGTG_ACTTGA_CGATGT.fa	FASTA	Protein	14368	5283339	1	367.7	4587
+aipysurusLaevis_KLS0468.fa	FASTA	Protein	23977	7193492	1	300.0	5207
+aipysurusLaevis_L1_eye.fa	FASTA	Protein	27655	11715897	86	423.6	4358
+aipysurusMosaicus.fa	FASTA	Protein	42098	18276062	84	434.1	8796
+hydrelapsDarwiniensis.fa	FASTA	Protein	45134	19847397	84	439.7	7045
+hydrophisKingii.fa	FASTA	Protein	34883	14929878	86	428.0	4932
+hydrophisMajor.fa	FASTA	Protein	32240	13747351	84	426.4	4611
+hydrophisMajor_KLS0460.fa	FASTA	Protein	23286	7570318	1	325.1	3232
+hydrophisPeronii.fa	FASTA	Protein	37012	15449718	85	417.4	4582
+najaNaja.fa	FASTA	Protein	23375	8355488	41	357.5	5532
+notechisScutatus.fa	FASTA	Protein	28673	19026526	31	663.6	33049
+pseudonajaTextilis.fa	FASTA	Protein	29925	19437104	31	649.5	34373

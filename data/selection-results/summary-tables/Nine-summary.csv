@@ -1,7 +1,0 @@
-Dataset,Gene,Species,P-value (aBSREL),P-value (RELAX),K-value,Selection
-Nine,VPS33A,Node_aipysurusLaevis,6.092015780723159e-12,NA,NA,NA
-Nine,OSBPL1A,Node_aipysurusLaevis,4.227378891386024e-9,NA,NA,NA
-Nine,SSBP4,Node_aipysurusLaevis,0,6.343071231151853e-6,7.19747487787343,Intensification
-Nine,TMEM106A,Node_aipysurusLaevis,2.258843112556974e-11,NA,NA,NA
-Nine,TXNDC12,Node_aipysurusLaevis,5.073728361992824e-4,NA,NA,NA
-Nine,C7,Node_aipysurusLaevis,3.979567189320576e-4,NA,NA,NA

@@ -32,6 +32,7 @@ gene.summary %>%
   mutate(
     `P-value` = factor(x = `P-value`, levels = c('0.05', '0.01', '0.001'))
   ) %>%
+  filter(str_detect(string = Condition, pattern = 'unique')) %>%
   ggplot(
     aes(
       x = `P-value`,
@@ -58,7 +59,7 @@ gene.summary %>%
     axis.text = element_text(size = 14),
     
     # Strip text
-    strip.text.x = element_text(size = 10, face = 'bold'),
+    strip.text.x = element_text(size = 14, face = 'bold'),
     strip.text.y = element_text(size = 14, face = 'bold')
   ) +
   facet_grid(

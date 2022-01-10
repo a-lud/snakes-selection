@@ -1,0 +1,20 @@
+Gene,Protein,Dataset,Organism/s
+ASB15,Ankyrin repeat and SOCS box protein 15,Chikina et al. 2016,59 placental mammals
+CAP1,Adenylyl cyclase-associated protein 1,Chikina et al. 2016,59 placental mammals
+GSN,Gelsolin,Chikina et al. 2016,59 placental mammals
+HOXB6,Homeobox B6,Chikina et al. 2016,59 placental mammals
+HOXD10,Homeobox D10,Chikina et al. 2016,59 placental mammals
+IFT88,Intraflagellar Transport 88,Chikina et al. 2016,59 placental mammals
+LMOD2,Leiomodin 2,Chikina et al. 2016,59 placental mammals
+NDRG1,N-Myc Downstream Regulated 1,Chikina et al. 2016,59 placental mammals
+RAPSN,Receptor Associated Protein Of The Synapse,Chikina et al. 2016,59 placental mammals
+ANPEP,"Alanyl Aminopeptidase, Membrane",Foote et al. 2015,"Killer while, Walrus, Manatee, Bottlenosed dolphin"
+CCDC137,Coiled-Coil Domain Containing 137,Foote et al. 2015,"Killer while, Walrus, Manatee, Bottlenosed dolphin"
+HSPE1,Heat Shock Protein Family E (Hsp10) Member 1,Foote et al. 2015,"Killer while, Walrus, Manatee, Bottlenosed dolphin"
+LCOR,Ligand Dependent Nuclear Receptor Corepressor,Foote et al. 2015,"Killer while, Walrus, Manatee, Bottlenosed dolphin"
+MAP3K14,Mitogen-Activated Protein Kinase Kinase Kinase 14,Foote et al. 2015,"Killer while, Walrus, Manatee, Bottlenosed dolphin"
+ATF4,Activating Transcription Factor 4,Gayk et al. 2018,Common loon (marine diving bird)
+GTSE1,G2 And S-Phase Expressed 1,Gayk et al. 2018,Common loon (marine diving bird)
+NPRL2,"NPR2 Like, GATOR1 Complex Subunit",Gayk et al. 2018,Common loon (marine diving bird)
+PLEK,Pleckstrin,Peng et al. 2020,Shaw's sea snake
+VPS54,VPS54 Subunit Of GARP Complex,Peng et al. 2020,Shaw's sea snake

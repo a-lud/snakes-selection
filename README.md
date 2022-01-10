@@ -1,20 +1,30 @@
 # Snake Selection Paper
 
-This repository contains scripts used for selection and HOG analyses. In addition to
-these scripts, the repository [nf-pipelines][nfpipelines] was also used to generate data -
+This repository contains the code, figures and tables presented in the paper:
+
+> Genomic signals of shifts in selection associated with the recent land-sea transition in front-fanged snakes (Elapidae)
+
+The custom pipelines used by some of these scripts can be found at [nf-pipelines][nfpipelines] -
 specifically the [MSA][msa] and [HyPhy][hyphy] pipelines.
 
-## Structure of the repository
+## Directories in the repository
 
-There are three main directories within this repository that house most of the information relating
-to this project:
+### Manuscript
 
-- **data**: Contains most of the results in more user-friendly formats. Specifically, files relating
-  to HyPhy results, selection-summary results along with utility data (annotaiton object, GO annotations)
-- **scripts**: This directory contains all the scripts used to generate the auxiliary data files,
-  run the analyses and explore the results. These should all be numbered in the order they were used.
-- **figures**: Figures generated form the exploration of the data. Should house all figures used
-  in the publication/some extra ones.
+This directory contains all the documents/figures/tables relating to the published
+manuscript.
+
+### Scripts
+
+Contains numbered directories which indicate the order that they were used (for
+the most part). 
+
+- **00_manuscript-figures-tables**: Code to generate manuscript materials
+- **01_analysis-preparation**: Scripts to build utility data objects
+- **02_data-generation-scripts**: Series of directories with scripts used to process the data
+- **03_selection**: Code to convert HyPhy output to dataframes and explore selection results
+- **04_GO-analysis**: Script to run _topGO_
+- **util**: Utility scripts I wrote to help with data processing
 
 [nfpipelines]: https://github.com/a-lud/nf-pipelines
 [msa]: https://github.com/a-lud/nf-pipelines/wiki/Multiple-Sequence-Alignment

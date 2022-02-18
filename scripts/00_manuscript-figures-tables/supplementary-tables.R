@@ -123,10 +123,10 @@ absrel.psg.curated.marine <- absrel.psg.marine[
   ) %>% 
   filter(!str_detect(string = Gene, pattern = '^OG'))
 
-# Write the curated 209 to file (needed for sanity check when manually curating)
+# Write the curated 211 to file (needed for sanity check when manually curating)
 write_csv(
   x = absrel.psg.curated.marine, 
-  file = here('manuscript', 'tables', 'curated-209-orthologs.csv'), 
+  file = here('manuscript', 'tables', 'curated-211-orthologs.csv'), 
   col_names = TRUE
 )
 
@@ -192,7 +192,7 @@ sheets <- list(
   'aBSREL (3,594)' = absrel,
   'aBSREL PSG A. laevis (379)' = absrel.psg.marine,
   'aBSREL PSG Terrestrial (514)' = absrel.psg.terrestrial,
-  'aBSREL Curated (209)' = absrel.psg.curated.marine,
+  'aBSREL Curated (211)' = absrel.psg.curated.marine,
   'RELAX (3,543)' = relax,
   'RELAX Significant (418)' = relax.significant,
   'Genes in discussion (48)' = discussion.genes.48,

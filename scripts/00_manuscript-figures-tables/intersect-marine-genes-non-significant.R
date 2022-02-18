@@ -83,7 +83,7 @@ synonyms <- bind_rows(
 # ---------------------------------------------------------------------------- #
 # Get exact and synonymous matches
 
-# 1. Find exact matches
+# 1. Find exact matches - 141 genes
 exact.matches <- synonyms %>%
   select(Gene, Group) %>%
   distinct() %>%
@@ -95,7 +95,11 @@ exact.matches <- synonyms %>%
 synonyms.no.exact <- synonyms %>% filter(! Gene %in% exact.matches$Gene)
 lit.genes.no.exact <- lit.genes %>% filter( ! lit.genes$symbol %in% exact.matches$Gene )
 
-synonym.matches <- inner_join(synonyms.no.exact, lit.genes.no.exact, by = c('Synonym' = 'synonym')) %>% arrange(Gene)
+synonym.matches <- inner_join(
+  synonyms.no.exact, lit.genes.no.exact,
+  by = c('Synonym' = 'synonym')
+) %>% 
+  arrange(Gene)
 
 write_csv(
   x = synonym.matches,
@@ -112,34 +116,53 @@ synonym.matches.checked <- read_csv(
   col_names = TRUE,
   col_types = cols()
 ) %>%
-  select(Gene, Group, dataset)
+  select(Gene, Group, dataset) %>%
+  mutate(dataset = sub('\\\\n', '\n', dataset))
 
 # ---------------------------------------------------------------------------- #
 # Bind exact matches with manually curated list
-lit.overlap.non.psg <- bind_rows(exact.matches, synonym.matches.checked)
-lit.overlap.non.psg %>% pull(Gene) %>% unique() %>% length() # 139 Genes
+# lit.overlap.non.psg <- bind_rows(exact.matches, synonym.matches.checked)
+# lit.overlap.non.psg %>% pull(Gene) %>% unique() %>% length() # 148 Genes
+# 
+# write_csv(
+#   lit.overlap.non.psg,
+#   file = here('data', 'literature-marine-genes', 'overlap-non-sig-literature.csv'),
+#   col_names = TRUE
+# )
 
-# ---------------------------------------------------------------------------- #
-# Plot
-ragg::agg_png(
-  filename = here('manuscript', 'figures', 'supplementary-literature-overlap-non-psg.png'),
-  width = 1500,
-  height = 1500,
-  units = 'px',
-  res = 144
-)
-lit.overlap.non.psg %>%
+lit.overlap.non.psg <- read_csv(here('data', 'literature-marine-genes', 'overlap-non-sig-literature.csv'))
+
+# Match levels to other plot
+lit.overlap.non.psg %<>%
   group_by(dataset) %>%
   summarise(count = n()) %>%
   mutate(
     n_genes = case_when(
-      dataset == 'Chikina et al. 2016' ~ '690',
-      dataset == 'Foote et al. 2015' ~ '191',
-      dataset == 'Gayk et al. 2018' ~ '152',
-      dataset == 'McGowan et al. 2012' ~ '228',
-      dataset == 'Peng et al. 2020'~ '471'
-    )
-  ) %>%
+      dataset == 'Chikina et al. 2016\n(Marine mammals)' ~ '690',
+      dataset == 'Foote et al. 2015\n(Marine mammals)' ~ '274',
+      dataset == 'Gayk et al. 2018\n(Diving bird)' ~ '152',
+      dataset == 'McGowan et al. 2012\n(Dolphin)' ~ '228',
+      dataset == 'Peng et al. 2020\n(Sea snake)'~ '470'
+    ),
+    dataset = factor(dataset, levels = c(
+      'Chikina et al. 2016\n(Marine mammals)',
+      'Foote et al. 2015\n(Marine mammals)',
+      'Gayk et al. 2018\n(Diving bird)',
+      'Peng et al. 2020\n(Sea snake)',
+      'McGowan et al. 2012\n(Dolphin)'
+    ))
+  )
+
+# ---------------------------------------------------------------------------- #
+# # Plot
+# ragg::agg_png(
+#   filename = here('manuscript', 'figures', 'supplementary-literature-overlap-non-psg.png'),
+#   width = 1500,
+#   height = 800,
+#   units = 'px',
+#   res = 144
+# )
+p <- lit.overlap.non.psg %>%
   ggplot(
     aes(
       x = dataset,
@@ -150,6 +173,7 @@ lit.overlap.non.psg %>%
   geom_bar(stat = 'identity', colour = 'black', alpha = 0.8) +
   geom_text(aes(label = n_genes), vjust = -0.5, size = 5) +
   ggpomological::scale_fill_pomological() +
+  ylim(c(0, 50)) +
   labs(
     y = 'Number of Genes'
   ) +
@@ -165,7 +189,11 @@ lit.overlap.non.psg %>%
     # Legend
     legend.position = 'none',
   )
-invisible(dev.off())
+write_rds(
+  x = p, 
+  file = here('data/literature-marine-genes/supplementary-non-psg-lit-overlap.rds')
+)
+# invisible(dev.off())
 
 # ---------------------------------------------------------------------------- #
 # Get aBSREL results for genes

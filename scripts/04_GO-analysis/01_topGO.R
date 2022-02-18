@@ -68,7 +68,7 @@ go_filtered %>%
   ) %>%
   filter(!is.na(GO)) %>%
   readr::write_tsv(
-    file = 'data/utility-data/topGo-four-snake-ogidGene-map.tsv',
+    file = here('data', 'utility-data', 'topGo-four-snake-ogidGene-map.tsv'),
     col_names = FALSE
   )
 
@@ -150,10 +150,10 @@ topGO_marine <- purrr::map(c('BP', 'MF', 'CC'), ~{
   
   # Write counts to file
   write(
-    x = paste(c(.x, 
+    x = paste(c(.x,
                 length(genes(godata)),
-                length(sigGenes(godata))), 
-              collapse = ','), 
+                length(sigGenes(godata))),
+              collapse = ','),
     file = path,
     append = TRUE
   )

@@ -4,7 +4,7 @@ This repository contains the code, figures and tables presented in the paper:
 
 > Genomic signals of shifts in selection associated with the recent land-sea transition in front-fanged snakes (Elapidae)
 
-The custom pipelines used by some of these scripts can be found at [nf-pipelines][nfpipelines] -
+The custom pipelines used by some of these scripts can be found at [nf-pipelines][nfpipelines] (build: 2f89cd6) -
 specifically the [MSA][msa] and [HyPhy][hyphy] pipelines.
 
 ## Directories in the repository
